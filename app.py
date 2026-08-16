@@ -62,7 +62,7 @@ def get_clan_id(id_value: str | None, clan_id: str | None) -> str | None:
 
 def get_region(region: str) -> str:
     normalized = region.upper()
-    return normalized if normalized in REGION_ENDPOINTS else "IND"
+    return normalized if normalized in REGION_ENDPOINTS else "BD"
 
 
 async def get_access_token(account: str) -> tuple[str | None, str | None]:
@@ -93,7 +93,7 @@ async def get_access_token(account: str) -> tuple[str | None, str | None]:
 
 
 async def create_jwt(region: str) -> None:
-    account = REGION_ACCOUNTS.get(region, REGION_ACCOUNTS["IND"])
+    account = REGION_ACCOUNTS.get(region, REGION_ACCOUNTS["BD"])
     token_value, open_id = await get_access_token(account)
     if token_value and open_id:
         jwt_tokens[region] = f"Bearer {token_value}"
@@ -284,7 +284,7 @@ async def clan_info_response(
 async def root(
     id: str | None = None,
     clan_id: str | None = None,
-    region: str = "IND",
+    region: str = "BD",
 ) -> JSONResponse | dict[str, Any]:
     if not get_clan_id(id, clan_id):
         return {
@@ -301,7 +301,7 @@ async def root(
 async def get_clan_info(
     id: str | None = None,
     clan_id: str | None = None,
-    region: str = "IND",
+    region: str = "BD",
 ) -> JSONResponse | dict[str, Any]:
     return await clan_info_response(id, clan_id, region, detailed=True)
 
@@ -310,7 +310,7 @@ async def get_clan_info(
 async def get_clan_info2(
     id: str | None = None,
     clan_id: str | None = None,
-    region: str = "IND",
+    region: str = "BD",
 ) -> JSONResponse | dict[str, Any]:
     return await clan_info_response(id, clan_id, region, detailed=False)
 
