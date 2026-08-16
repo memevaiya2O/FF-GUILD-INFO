@@ -15,6 +15,8 @@ import encode_id_clan_pb2
 # ===================== CONFIG =====================
 app = Flask(__name__)
 freefire_version = "OB54"
+API_AUTH = "FFxAPI"
+API_CONTACT = "https://t.me/FFxAPI"
 key = bytes([89, 103, 38, 116, 99, 37, 68, 69, 117, 104, 54, 37, 90, 99, 94, 56])
 iv = bytes([54, 111, 121, 90, 68, 114, 50, 50, 69, 51, 121, 99, 104, 106, 77, 37])
 jwt_tokens = {}  # Store tokens by region
@@ -161,7 +163,7 @@ async def ensure_token(region):
 # ===================== CLAN INFO ROUTE (SYNC) =====================
 @app.route('/info2', methods=['GET'])
 def get_clan_info222():
-    clan_id = request.args.get('clan_id')
+    clan_id = request.args.get('id') or request.args.get('clan_id')
     region = request.args.get('region', 'IND').upper()
 
     # Validate clan_id
@@ -306,8 +308,8 @@ def get_clan_info222():
             "welcome_message": getattr(resp, "welcome_message", None),
             "score": getattr(resp, "score", 0),
             "xp": getattr(resp, "xp", 0),
-            "Api Owner": "FFxAPI",
-            "TG CHANNEL": "https://t.me/FFxAPI",
+            "auth": API_AUTH,
+            "cnct": API_CONTACT,
             "status": "success",
             "requested_region": region
         })
@@ -322,7 +324,7 @@ def get_clan_info222():
 
 @app.route('/info', methods=['GET'])
 def get_clan_info():
-    clan_id = request.args.get('clan_id')
+    clan_id = request.args.get('id') or request.args.get('clan_id')
     region = request.args.get('region', 'IND').upper()
 
     # Validate clan_id
@@ -400,6 +402,8 @@ def get_clan_info():
         return jsonify({
             "status": "success",
             "requested_region": region,
+            "auth": API_AUTH,
+            "cnct": API_CONTACT,
             "full_response": full_response
         })
 
@@ -412,12 +416,15 @@ def get_clan_info():
                         
 @app.route('/', methods=['GET'])
 def home():
+    if request.args.get('id') or request.args.get('clan_id'):
+        return get_clan_info()
+
     return """
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ROTATOR API SYSTEM</title>
+<title>FFxAPI SYSTEM</title>
 
 <style>
 body{
@@ -716,7 +723,7 @@ btn.onclick = async () => {
 
     Hᴏᴡ Tᴏ Uꜱᴀɢᴇ Aᴩɪ
 </h2>
-<code>/info?clan_id=123456&region=IND</code>
+<code>/?id=123456&amp;region=IND</code>
 <p>Gᴇᴛ Cʟᴀɴ Dᴀᴛᴀ OB53</p>
 </div>
 
@@ -767,8 +774,8 @@ btn.onclick = async () => {
     overflow:auto;
 ">
 {
-  "Api Owner": "FFxAPI",
-  "TG CHHANEL": "https://t.me/FFxAPI",
+  "auth": "FFxAPI",
+  "cnct": "https://t.me/FFxAPI",
   "clan_id": 60205231,
   "clan_name": "MGㅤINDIAㅤ",
   "created_at": "2018-02-07 14:12:53",
@@ -819,26 +826,6 @@ btn.onclick = async () => {
             <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png"
                  width="26" height="26">
             <span style="color:white;font-weight:bold;">Telegram</span>
-        </div>
-
-    </a>
-
-    <!-- INSTAGRAM BUTTON -->
-    <a href="https://www.instagram.com/_cute_x_jee_t_?igsh=anQ4YXVldW9hM3I4" target="_blank" style="text-decoration:none;">
-
-        <div style="
-            display:inline-flex;
-            align-items:center;
-            gap:10px;
-            padding:12px 18px;
-            margin:5px;
-            border-radius:50px;
-            background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af);
-            box-shadow:0 0 15px #dd2a7b;
-        ">
-            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
-                 width="26" height="26">
-            <span style="color:white;font-weight:bold;">Instagram</span>
         </div>
 
     </a>
