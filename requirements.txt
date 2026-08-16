@@ -6,5 +6,4 @@ pyjwt
 urllib3
 pycryptodome
 httpx
-threading
 
